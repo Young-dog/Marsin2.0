@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:marsin/screens/basket.dart';
-import 'package:marsin/screens/contacts.dart';
 import 'package:marsin/screens/home_page.dart';
-import 'package:marsin/screens/shop.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,14 +15,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(),
+      theme: ThemeData(fontFamily: "IBMPlexSans"),
       home: const HomePage(),
       navigatorKey: navigatorKey,
       routes: {
         HomePage.id: (context) => const HomePage(),
-        Contacts.id: (context) => const Contacts(),
-        Shop.id: (context) => const Shop(),
-        Basket.id: (context) => const Basket(),
       },
     );
   }

@@ -1,0 +1,26 @@
+[
+  {
+    "family": "IBMPlexSans",
+    "fonts": [
+      {
+        "asset": "fonts/IBMPlexSans-Regular.ttf"
+      }
+    ]
+  },
+  {
+    "family": "IBMPlexSansBold",
+    "fonts": [
+      {
+        "asset": "fonts/IBMPlexSans-BoldItalic.ttf"
+      }
+    ]
+  },
+  {
+    "family": "IBMPlexSansItalic",
+    "fonts": [
+      {
+        "asset": "fonts/IBMPlexSans-Italic.ttf"
+      }
+    ]
+  }
+]
