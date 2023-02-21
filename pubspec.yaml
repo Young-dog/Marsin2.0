@@ -37,6 +37,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_web3: ^2.1.9
+  sizer: ^2.0.15
 
 dev_dependencies:
   flutter_test:
@@ -81,15 +82,18 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: IBMPlexSans
+    - family: IBMPlexSerif
       fonts:
-        - asset: fonts/IBMPlexSans-Regular.ttf
-    - family: IBMPlexSansBold
+        - asset: fonts/IBMPlexSerif-Regular.ttf
+    - family: IBMPlexSerifBold
       fonts:
-        - asset: fonts/IBMPlexSans-BoldItalic.ttf
-    - family: IBMPlexSansItalic
+        - asset: fonts/IBMPlexSerif-Bold.ttf
+    - family: IBMPlexSerifItalic
       fonts:
-        - asset: fonts/IBMPlexSans-Italic.ttf
+        - asset: fonts/IBMPlexSerif-Italic.ttf
+    - family: IBMPlexSerifBoldItalic
+      fonts:
+        - asset: fonts/IBMPlexSerif-BoldItalic.ttf
   #         style: italic
   #
   # For details regarding fonts from package dependencies,
