@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:marsin/widgets/about_us.dart';
+import 'package:marsin/widgets/advantages.dart';
+import 'package:marsin/widgets/feedback.dart';
 
 import '../links.dart';
 import '../widgets/card.dart';
@@ -19,12 +21,14 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        backgroundColor: backColor,
+        backgroundColor: Color(0xFF27011D).withOpacity(0.7),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               CardChoco(),
               AboutUs(),
+              Advantages(),
+              FeedbackScreen(),
             ],
           ),
         ),
