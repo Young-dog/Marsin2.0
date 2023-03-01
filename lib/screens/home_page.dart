@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:marsin/widgets/about_us.dart';
 import 'package:marsin/widgets/advantages.dart';
 import 'package:marsin/widgets/feedback.dart';
+import 'package:marsin/widgets/pc/feedback_for_pc.dart';
 
 import '../links.dart';
 import '../widgets/card.dart';
@@ -28,7 +29,7 @@ class _HomePageState extends State<HomePage> {
               CardChoco(),
               AboutUs(),
               Advantages(),
-              FeedbackScreen(),
+              FeedbackForPC(),
             ],
           ),
         ),

@@ -9,6 +9,10 @@ class FeedbackScreen extends StatefulWidget {
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
 
+  // String validateMobile(String value) {
+  //
+  // }
+
   final _formKey = GlobalKey<FormState>();
 
   String username = "";
@@ -25,9 +29,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
     _formKey.currentState!.save();
 
-    FirebaseFirestore.instance.collection("data").add({
-      "name" : username,
-      "phone" : phone
+    setState(() {
+      FirebaseFirestore.instance.collection("data").add({
+        "name" : username,
+        "phone" : phone
+      });
     });
   }
 
@@ -117,10 +123,16 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         onChanged: (value) {
                           phone = value;
                         },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Пожалуйста ведите ваш номер телефона";
+                        validator: (value){
+                          String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+                          RegExp regExp = new RegExp(patttern);
+                          if (value!.length == 0) {
+                            return 'Please enter mobile number';
                           }
+                          else if (!regExp.hasMatch(value)) {
+                            return 'Please enter valid mobile number';
+                          }
+                          return null;
                         },
                       ),
                     ),

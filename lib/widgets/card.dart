@@ -80,32 +80,29 @@ class CardChoco extends StatelessWidget {
                     height: 100,
                   ),
 
-                  MaterialButton(
-
-                    onPressed: (){},
-                    child: Ink(
+                  GestureDetector(
+                    onTap: () {
+                    },
+                    child: Container(
                       width: 400,
                       height: 100,
                       decoration: const BoxDecoration(
-                          gradient: LinearGradient(colors: [
-                            Color(0xFFFBF1B39),
-                            Color(0xFFD13434),
-                          ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
+                        gradient: LinearGradient(colors: [
+                          Color(0xFFFBF1B39),
+                          Color(0xFFD13434),
+                        ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
                         borderRadius: BorderRadius.all(Radius.circular(80.0)),
                       ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: const Text(
-                          "Выбрать десерт",
-                          style: TextStyle(
-                            color: Color(0xFFFFFFFF),
-                            fontSize: 40,
-                            fontFamily: "IBMPlexSerif",
-                          ),
+                      alignment: Alignment.center,
+                      child: const Text(
+                        "Выбрать десерт",
+                        style: TextStyle(
+                          color: Color(0xFFFFFFFF),
+                          fontSize: 40,
+                          fontFamily: "IBMPlexSerif",
                         ),
                       ),
-                    ),
-                  ),
+                    ),),
                 ],
               ),
             ),
