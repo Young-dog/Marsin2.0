@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:marsin/widgets/navigation_bar.dart';
+import 'package:marsin/widgets/pc/feedback_for_pc.dart';
 import 'package:sizer/sizer.dart';
 
 import '../links.dart';
@@ -30,79 +31,45 @@ class CardChoco extends StatelessWidget {
                 children: [
                   const Text(
                     "Шоколад",
-                    style: TextStyle(
-                      shadows: <Shadow>[
-                        Shadow(
-                          offset: Offset(2, 2),
-                          blurRadius: 1,
-                        ),
-                      ],
-                      color: Colors.white,
-                      fontSize: 70,
-                      fontFamily: "IBMPlexSerifBoldItalic",
-                      letterSpacing: 0.07,
-                    ),
+                    style: boldItalic,
                     textAlign: TextAlign.center,
                   ),
                   //SizedBox(height: 15,),
                   const Text(
                     "ручной работы",
-                    style: TextStyle(
-                      shadows: <Shadow>[
-                        Shadow(
-                          offset: Offset(2, 2),
-                          blurRadius: 1,
-                        ),
-                      ],
-                      color: Colors.white,
-                      fontSize: 70,
-                      fontFamily: "IBMPlexSerifBoldItalic",
-                      letterSpacing: 0.07,
-                    ),
+                    style: boldItalic,
                     textAlign: TextAlign.center,
                   ),
                   const Text(
                     "Подарки на любой праздник",
-                    style: TextStyle(
-                      shadows: <Shadow>[
-                        Shadow(
-                          offset: Offset(2, 2),
-                          blurRadius: 1,
-                        ),
-                      ],
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontFamily: "IBMPlexSerifItalic",
-                      letterSpacing: 0.07,
-                    ),
+                    style: italic,
                   ),
                   const SizedBox(
                     height: 100,
                   ),
-
-                  GestureDetector(
-                    onTap: () {
+                  MaterialButton(
+                    onPressed: () {
                     },
-                    child: Container(
-                      width: 400,
-                      height: 100,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(80.0)),
+                    padding: const EdgeInsets.all(0.0),
+                    child: Ink(
                       decoration: const BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                          Color(0xFFFBF1B39),
-                          Color(0xFFD13434),
-                        ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
+                        gradient: gradientForButton,
                         borderRadius: BorderRadius.all(Radius.circular(80.0)),
                       ),
-                      alignment: Alignment.center,
-                      child: const Text(
-                        "Выбрать десерт",
-                        style: TextStyle(
-                          color: Color(0xFFFFFFFF),
-                          fontSize: 40,
-                          fontFamily: "IBMPlexSerif",
+                      child: Container(
+                        width: 400,
+                        height: 100,
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'Выбрать десерт',
+                          style: regular,
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                    ),),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -117,17 +84,7 @@ class CardChoco extends StatelessWidget {
             widthFactor: .2,
             child: Text(
               "Сделано с любовью",
-              style: TextStyle(
-                shadows: <Shadow>[
-                  Shadow(
-                    offset: Offset(2, 2),
-                    blurRadius: 1,
-                  ),
-                ],
-                color: Colors.white,
-                fontSize: 6.sp,
-                fontFamily: "IBMPlexSerifItalic",
-              ),
+              style: italic
             ),
           )
         ],
