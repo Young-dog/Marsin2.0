@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fires;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 
 class AddDesertScreen extends StatefulWidget {
   static const String id = "screen_add_desert";
@@ -16,7 +17,9 @@ class AddDesertScreen extends StatefulWidget {
 
 class _AddDesertScreenState extends State<AddDesertScreen> {
 
-  Future<void> _submit({required File image}) async{
+  Uint8List? imageFile;
+
+  Future<void> _submit({required Uint8List image}) async{
     FocusScope.of(context).unfocus();
 
     if (_description.trim().isNotEmpty) {
@@ -24,7 +27,7 @@ class _AddDesertScreenState extends State<AddDesertScreen> {
       fires.FirebaseStorage storage = fires.FirebaseStorage.instance; // Создание экземпляра
 
       //Загружаем файл, получаем ссылку
-      await storage.ref("images/${UniqueKey().toString()}.png").putFile(image).then((taskSnapshot) async {
+      await storage.ref("images/${UniqueKey().toString()}.png").putData(image).then((taskSnapshot) async {
         _imageUrl = await taskSnapshot.ref.getDownloadURL();
       });
     }
@@ -42,11 +45,10 @@ class _AddDesertScreenState extends State<AddDesertScreen> {
 
   late String _imageUrl;
   String _description = "";
-  double _price = 0;
+  String _price = "0";
 
   @override
   Widget build(BuildContext context) {
-    final File imageFile = ModalRoute.of(context)!.settings.arguments as File;
 
     return Scaffold(
       appBar: AppBar(),
@@ -58,17 +60,10 @@ class _AddDesertScreenState extends State<AddDesertScreen> {
           color: Colors.white,
           child: Column(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: FileImage(imageFile),
-                      fit: BoxFit.cover,
-                    )
-                ),
-                width: MediaQuery.of(context).size.width / 1.4,
-                height: MediaQuery.of(context).size.width / 1.4,
-              ),
+              imageFile == null ? IconButton(onPressed: () async {
+                imageFile = await ImagePickerWeb.getImageAsBytes();
+              }, icon: Icon(Icons.add)):
+             Image.memory(imageFile!),
               TextField(
                 decoration: InputDecoration(
                   hintText: "Enter a description ",
@@ -82,7 +77,7 @@ class _AddDesertScreenState extends State<AddDesertScreen> {
                 },
 
                 onEditingComplete: (){
-                  _submit(image: imageFile);
+                  _submit(image: imageFile!);
                 },
               ),
               TextField(
@@ -91,11 +86,11 @@ class _AddDesertScreenState extends State<AddDesertScreen> {
                 ),
                 textInputAction: TextInputAction.done,
                 onChanged: (value) {
-                  _price = value as double;
+                  _price = value;
                 },
 
                 onEditingComplete: (){
-                  _submit(image: imageFile);
+                  _submit(image: imageFile!);
                 },
               )
             ],

@@ -44,6 +44,9 @@ dependencies:
   sentry_flutter: ^6.21.0
   firebase_storage: ^11.0.14
   image_picker: ^0.8.6+4
+  image_picker_web: ^3.0.0+1
+  universal_html: ^2.0.9
+  webview_flutter: ^4.0.6
 
 dev_dependencies:
   flutter_test:
