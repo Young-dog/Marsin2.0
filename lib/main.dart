@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:marsin/widgets/pc/add_desert.dart';
 import 'package:marsin/widgets/screen_add_desert.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
           navigatorKey: navigatorKey,
           routes: {
             HomePage.id: (context) => const HomePage(),
-            AddDesertScreen.id: (context) => const AddDesertScreen(),
+            AddDesert.id: (context) => const AddDesert(),
           },
         );
       },
