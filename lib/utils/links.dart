@@ -28,14 +28,29 @@ dynamic logo = Padding(
   ),
 );
 String imageFlowerForCard = "images/flowersForCard.png";
-final Color backColor = Color(0xFF27011D).withOpacity(0.7);
+final Gradient backColor = LinearGradient(
+  colors: [firstColor, secondColor,],
+  begin: Alignment.centerLeft,
+  end: Alignment.centerRight,
+);
 const Gradient gradientForButton = LinearGradient(
   colors: [Color(0xFFFFFFFF), Color(0xFFBF1B39),],
   end: Alignment.center,
   begin: Alignment.topCenter,
 );
 
-const TextStyle bold = TextStyle();
+const TextStyle bold = TextStyle(
+  shadows: <Shadow>[
+    Shadow(
+      offset: Offset(2, 2),
+      blurRadius: 1,
+    ),
+  ],
+  color: Colors.white,
+  fontSize: 40,
+  fontFamily: "IBMPlexSerifBold",
+  letterSpacing: 0.07,
+);
 const TextStyle boldItalic = TextStyle(
   shadows: <Shadow>[
     Shadow(
@@ -83,3 +98,7 @@ const TextStyle styleForCard = TextStyle(
   fontFamily: "IBMPlexSerifBoldItalic",
   letterSpacing: 0.07,
 );
+
+
+Color firstColor = Color(0xFF4E093A).withOpacity(0.8);
+Color secondColor = Color(0xFF060606).withOpacity(0.8);

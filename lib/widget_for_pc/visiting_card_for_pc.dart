@@ -1,43 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:marsin/widgets/navigation_bar.dart';
-import 'package:marsin/widgets/pc/feedback_for_pc.dart';
-import 'package:sizer/sizer.dart';
+import '../utils/links.dart';
 
-import '../links.dart';
+import 'navigation_bar.dart';
 
-class CardChoco extends StatelessWidget {
-  const CardChoco({Key? key}) : super(key: key);
+class VisitingCard extends StatefulWidget {
+  const VisitingCard({Key? key}) : super(key: key);
 
   @override
+  State<VisitingCard> createState() => _VisitingCardState();
+}
+
+class _VisitingCardState extends State<VisitingCard> {
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          FractionallySizedBox(
-            alignment: Alignment.topCenter,
-            child: NavBar(),
-          ),
-          FractionallySizedBox(
-            alignment: Alignment.bottomLeft,
-            heightFactor: .9,
-            widthFactor: .6,
-            child:
+    return  Material(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: backColor
+        ),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            //navigationBAr
+            FractionallySizedBox(
+              alignment: Alignment.topCenter,
+              child: NavBar(),
+            ),
+            //Text and Button
+            FractionallySizedBox(
+              alignment: Alignment.bottomLeft,
+              heightFactor: .9,
+              widthFactor: .6,
+              child:
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text(
                     "Шоколад",
-                    style: boldItalic,
+                    style: styleForCard,
+
                     textAlign: TextAlign.center,
                   ),
                   //SizedBox(height: 15,),
                   const Text(
                     "ручной работы",
-                    style: boldItalic,
+                    style: styleForCard,
                     textAlign: TextAlign.center,
                   ),
                   const Text(
@@ -73,21 +83,14 @@ class CardChoco extends StatelessWidget {
                 ],
               ),
             ),
-          FractionallySizedBox(
-            alignment: Alignment.topRight,
-            widthFactor: .4,
-            child: Image.asset(imageFlowerForCard),
-          ),
-          FractionallySizedBox(
-            alignment: Alignment.bottomRight,
-            heightFactor: .1 *0.8,
-            widthFactor: .2,
-            child: Text(
-              "Сделано с любовью",
-              style: italic
+            //Image flower
+            FractionallySizedBox(
+              alignment: Alignment.topRight,
+              widthFactor: .4,
+              child: Image.asset(imageFlowerForCard),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }

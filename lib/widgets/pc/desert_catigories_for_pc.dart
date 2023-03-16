@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fires;
 
-import '../../links.dart';
+import '../../utils/links.dart';
 
 class AddDesert extends StatefulWidget {
   static const String id = "add_desert";
@@ -67,7 +67,9 @@ class _AddDesertState extends State<AddDesert> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          color: backColor.withOpacity(0.1),
+          decoration: BoxDecoration(
+            gradient: backColor
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

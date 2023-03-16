@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:marsin/links.dart';
+import '../utils/links.dart';
 import 'package:sizer/sizer.dart';
 
 import '../utils/responsiveLayout.dart';

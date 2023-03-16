@@ -6,7 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker_web/image_picker_web.dart';
-import 'package:marsin/links.dart';
+
+import '../../utils/links.dart';
 
 class AddDesertScreen extends StatefulWidget {
   static const String id = "screen_add_desert";
@@ -81,7 +82,9 @@ class _AddDesertScreenState extends State<AddDesertScreen> {
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              color: backColor,
+              decoration: BoxDecoration(
+                gradient: backColor,
+              ),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
