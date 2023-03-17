@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker_web/image_picker_web.dart';
+import 'package:marsin/screens/home_page.dart';
 
 import '../utils/links.dart';
 
@@ -73,8 +74,12 @@ class _DesertForPcState extends State<DesertForPc> {
                 children: [
                   MaterialButton(
                     onPressed: () {},
+                    hoverColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    mouseCursor: MouseCursor.defer,
                     child: logo,
                   ),
+                  SizedBox(width: MediaQuery.of(context).size.width / 3.5,),
                   Text(
                     "Категории десертиков",
                     style: bold,
@@ -82,25 +87,28 @@ class _DesertForPcState extends State<DesertForPc> {
                 ],
               ),
             ),
-            SizedBox(height: 50,),
+            SizedBox(
+              height: 50,
+            ),
             Container(
               width: MediaQuery.of(context).size.width,
               child: Row(
                 children: [
                   IconButton(
                     onPressed: () {},
-                    iconSize:  80,
+                    iconSize: 80,
                     icon: Icon(Icons.keyboard_arrow_left),
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width - 200  ,
+                    width: MediaQuery.of(context).size.width - 200,
                     height: 600,
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.white, width: 1),
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                    },
                     iconSize: 80,
                     icon: Icon(Icons.keyboard_arrow_right),
                   ),

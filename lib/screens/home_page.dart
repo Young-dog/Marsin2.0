@@ -18,19 +18,28 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+
+
   @override
   Widget build(BuildContext context) {
     final PageController _controller = PageController();
-    return ListView(
-      scrollDirection: Axis.vertical,
-      controller:  _controller,
-      children: [
-        VisitingCard(),
-        AboutUs(),
-        Advantages(),
-        DesertForPc(),
-        FeedbackForPC(),
-      ],
+    return Container(
+      decoration: BoxDecoration(
+        gradient: backColor,
+      ),
+      child: ListView(
+        scrollDirection: Axis.vertical,
+        addRepaintBoundaries: false,
+        controller:  _controller,
+        padding: EdgeInsets.all(0.0),
+        children: [
+          VisitingCard(),
+          AboutUs(),
+          Advantages(),
+          DesertForPc(),
+          FeedbackForPC(),
+        ],
+      ),
     );
   }
 }
