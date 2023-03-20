@@ -146,7 +146,7 @@ class _AdminPanelState extends State<AdminPanel> {
                                 ? MaterialButton(
                                     onPressed: () {
                                         setState(() {
-                                          getImage()
+                                          getImage();
                                         });
                                     },
                                     child: Text("Добавить изображение"),
