@@ -101,14 +101,22 @@ class _DesertForPcState extends State<DesertForPc> {
             adminPanelActive == true ? Align(
               alignment: Alignment.center,
               child: AlertDialog(
-                title: Text("AlertDialog"),
-                content: Text(
-                    "Would you like to continue learning how to use Flutter alerts?"),
+                backgroundColor: Color(0xFF4B1A3D),
+                title: Text("Авторизация",style: bold,),
                 actions: [
                   TextField(
                     onChanged: (value) {
                       passwd = value;
                     },
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          width: 1,
+                          color: Colors.white,
+                        ),
+                        borderRadius: BorderRadius.circular(70),
+                      )
+                    ),
                   ),
                   TextButton(
                     child: Text("Continue"),

@@ -19,6 +19,14 @@ class AboutUs extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             FractionallySizedBox(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  Image.asset(chocoAboutUs),
+                ],
+              ),
+            ),
+            FractionallySizedBox(
               widthFactor: .5,
               alignment: Alignment.topRight,
               child: Column(

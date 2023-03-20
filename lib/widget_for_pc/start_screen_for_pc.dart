@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
-import '../utils/links.dart';
+import 'package:marsin/utils/links.dart';
 
 import 'navigation_bar.dart';
 
-class VisitingCard extends StatefulWidget {
-  const VisitingCard({Key? key}) : super(key: key);
+class StartScreenForPc extends StatefulWidget {
+  const StartScreenForPc({Key? key}) : super(key: key);
 
   @override
-  State<VisitingCard> createState() => _VisitingCardState();
+  State<StartScreenForPc> createState() => _StartScreenForPcState();
 }
 
-class _VisitingCardState extends State<VisitingCard> {
+class _StartScreenForPcState extends State<StartScreenForPc> {
   @override
   Widget build(BuildContext context) {
-    return  Material(
+    return Material(
       child: Container(
         decoration: BoxDecoration(
-          gradient: backColor
+            gradient: backColor
         ),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Stack(
-          fit: StackFit.expand,
           children: [
             //navigationBAr
             FractionallySizedBox(
-              alignment: Alignment.topCenter,
-              child: NavBar(),
-            ),
+                alignment: Alignment.topCenter,
+                child: NavBar(),
+              ),
             //Text and Button
             FractionallySizedBox(
               alignment: Alignment.bottomLeft,
@@ -64,9 +63,16 @@ class _VisitingCardState extends State<VisitingCard> {
                         borderRadius: BorderRadius.circular(80.0)),
                     padding: const EdgeInsets.all(0.0),
                     child: Ink(
-                      decoration: const BoxDecoration(
+                      decoration:  BoxDecoration(
                         gradient: gradientForButton,
                         borderRadius: BorderRadius.all(Radius.circular(80.0)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xFF501E1E).withOpacity(0.8),
+                            blurRadius: 9,
+                            offset: Offset(4, 8),
+                          )
+                        ]
                       ),
                       child: Container(
                         width: 400,
@@ -85,9 +91,14 @@ class _VisitingCardState extends State<VisitingCard> {
             ),
             //Image flower
             FractionallySizedBox(
-              alignment: Alignment.topRight,
-              widthFactor: .4,
-              child: Image.asset(imageFlowerForCard),
+              alignment: Alignment.center,
+              widthFactor: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Image.asset(imageFlowerForCard,),
+                ],
+              ),
             ),
           ],
         ),

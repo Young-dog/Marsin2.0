@@ -27,15 +27,16 @@ dynamic logo = Padding(
     ],
   ),
 );
-String imageFlowerForCard = "images/flowersForCard.png";
+String imageFlowerForCard = "images/ChocoForStart.png";
+String chocoAboutUs = "images/ChocoAboutUs.png";
 final Gradient backColor = LinearGradient(
   colors: [firstColor, secondColor,],
   begin: Alignment.centerLeft,
   end: Alignment.centerRight,
 );
-const Gradient gradientForButton = LinearGradient(
-  colors: [Color(0xFFFFFFFF), Color(0xFFBF1B39),],
-  end: Alignment.center,
+Gradient gradientForButton = LinearGradient(
+  colors: [test2, test1,],
+  end: Alignment.bottomCenter,
   begin: Alignment.topCenter,
 );
 
@@ -100,5 +101,7 @@ const TextStyle styleForCard = TextStyle(
 );
 
 
-Color firstColor = Color(0xFF4E093A).withOpacity(0.8);
-Color secondColor = Color(0xFF060606).withOpacity(0.8);
+Color firstColor = Color(0xFF4E093A).withOpacity(0.9);
+Color secondColor = Color(0xFF060606).withOpacity(0.9);
+Color test1 = Color(0xFFDA0D00).withOpacity(0.9);
+Color test2 = Color(0xFFE3463C);

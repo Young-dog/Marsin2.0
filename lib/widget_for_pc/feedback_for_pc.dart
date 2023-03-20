@@ -209,7 +209,7 @@ class _FeedbackForPCState extends State<FeedbackForPC> {
                                 borderRadius: BorderRadius.circular(80.0)),
                             padding: const EdgeInsets.all(0.0),
                             child: Ink(
-                              decoration: const BoxDecoration(
+                              decoration:  BoxDecoration(
                                 gradient: gradientForButton,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(80.0)),
