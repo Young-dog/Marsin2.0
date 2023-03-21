@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-abstract class Desert {
+class Desert {
   final String imageUrl;
   final String id;
-  final double price;
+  final String price;
   final String description;
   final Timestamp timestamp;
 

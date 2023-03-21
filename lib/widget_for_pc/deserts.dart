@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:marsin/screens/home_page.dart';
-import 'package:marsin/widget_for_pc/admin_panel.dart';
+import 'package:marsin/admin_panel/admin_panel.dart';
 
 import '../utils/links.dart';
 
@@ -97,38 +97,62 @@ class _DesertForPcState extends State<DesertForPc> {
                 ),
               ],
             ),
-
-            adminPanelActive == true ? Align(
-              alignment: Alignment.center,
-              child: AlertDialog(
-                backgroundColor: Color(0xFF4B1A3D),
-                title: Text("Авторизация",style: bold,),
-                actions: [
-                  TextField(
-                    onChanged: (value) {
-                      passwd = value;
-                    },
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: Colors.white,
+            adminPanelActive == true
+                ? Align(
+                    alignment: Alignment.center,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          adminPanelActive = !adminPanelActive;
+                        });
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        color: Colors.white.withOpacity(0.1),
+                        child: AlertDialog(
+                          backgroundColor: Color(0xFF4B1A3D),
+                          title: Text(
+                            "Авторизация",
+                            style: bold,
+                          ),
+                          actions: [
+                            TextField(
+                              onChanged: (value) {
+                                passwd = value;
+                              },
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: Colors.white,
+                                ),
+                                borderRadius: BorderRadius.circular(70),
+                              )),
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: TextButton(
+                                child: Text(
+                                  "Войти",
+                                  style: TextStyle(
+                                      fontFamily: "IBMPlexSerif",
+                                      fontSize: 27,
+                                      color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  if (controlPass(passwd)) {
+                                    Navigator.of(context).pushReplacementNamed(AdminPanel.id);
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                        borderRadius: BorderRadius.circular(70),
-                      )
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    child: Text("Continue"),
-                    onPressed: () {
-                      if (controlPass(passwd)) {
-                        Navigator.of(context).pushNamed(AdminPanel.id);
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ) : Container(),
+                  )
+                : Container(),
           ],
         ),
       ),

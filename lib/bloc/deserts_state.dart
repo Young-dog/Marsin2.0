@@ -22,7 +22,3 @@ class DesertsAdd extends DesertsState{
 class DesertsEdit extends DesertsState{
   const DesertsEdit();
 }
-
-class DesertsDel extends DesertsState{
-  const DesertsDel();
-}

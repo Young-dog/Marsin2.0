@@ -8,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart' as fires;
 part 'deserts_state.dart';
 
 class DesertsCubit extends Cubit<DesertsState> {
-  DesertsCubit() : super(DesertsInitial());
+  DesertsCubit() : super(DesertsAdd());
 
   Future<void> addDesert({required String name, required Uint8List imageFile, required String price}) async {
     late String imageUrl;
