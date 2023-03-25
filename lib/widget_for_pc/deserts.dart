@@ -1,12 +1,5 @@
-import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart' as fires;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker_web/image_picker_web.dart';
-import 'package:marsin/screens/home_page.dart';
 import 'package:marsin/admin_panel/admin_panel.dart';
 
 import '../utils/links.dart';
@@ -19,7 +12,6 @@ class DesertForPc extends StatefulWidget {
 }
 
 class _DesertForPcState extends State<DesertForPc> {
-  Uint8List? _imageFile;
 
   // set up the buttons
   String passwd = "";
@@ -43,7 +35,7 @@ class _DesertForPcState extends State<DesertForPc> {
           children: [
             Column(
               children: [
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Row(
                     children: [
@@ -61,24 +53,24 @@ class _DesertForPcState extends State<DesertForPc> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width / 3.5,
                       ),
-                      Text(
+                      const Text(
                         "Категории десертиков",
                         style: bold,
                       )
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Row(
                     children: [
                       IconButton(
                         onPressed: () {},
                         iconSize: 80,
-                        icon: Icon(Icons.keyboard_arrow_left),
+                        icon: const Icon(Icons.keyboard_arrow_left),
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width - 200,
@@ -90,7 +82,7 @@ class _DesertForPcState extends State<DesertForPc> {
                       IconButton(
                         onPressed: () {},
                         iconSize: 80,
-                        icon: Icon(Icons.keyboard_arrow_right),
+                        icon: const Icon(Icons.keyboard_arrow_right),
                       ),
                     ],
                   ),
@@ -111,8 +103,8 @@ class _DesertForPcState extends State<DesertForPc> {
                         height: MediaQuery.of(context).size.height,
                         color: Colors.white.withOpacity(0.1),
                         child: AlertDialog(
-                          backgroundColor: Color(0xFF4B1A3D),
-                          title: Text(
+                          backgroundColor: const Color(0xFF4B1A3D),
+                          title: const Text(
                             "Авторизация",
                             style: bold,
                           ),
@@ -123,7 +115,7 @@ class _DesertForPcState extends State<DesertForPc> {
                               },
                               decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   width: 1,
                                   color: Colors.white,
                                 ),
@@ -133,7 +125,7 @@ class _DesertForPcState extends State<DesertForPc> {
                             Align(
                               alignment: Alignment.center,
                               child: TextButton(
-                                child: Text(
+                                child: const Text(
                                   "Войти",
                                   style: TextStyle(
                                       fontFamily: "IBMPlexSerif",

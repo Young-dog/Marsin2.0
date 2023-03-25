@@ -36,11 +36,27 @@ class DesertsCubit extends Cubit<DesertsState> {
 
     print(imageUrl);
 
-    emit(DesertsInitial());
+    emit(DesertsAdd());
+  }
+
+  Future<void> editDesert({required String id, required String name, required String price}) async{
+    await FirebaseFirestore.instance.collection("deserts").doc(id).update({
+      "timestamp": Timestamp.now(),
+      "name": name,
+      "price": price,
+    });
+  }
+
+  Future<void> delDesert({required String docId}) async{
+    await FirebaseFirestore.instance.collection("deserts").doc(docId).delete();
   }
 
   void desertPlusOne() {
     emit(DesertsAdd());
+  }
+
+  void deserEditState() {
+    emit(DesertsEdit());
   }
 
 }
