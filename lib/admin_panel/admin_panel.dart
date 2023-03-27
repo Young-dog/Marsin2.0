@@ -50,14 +50,12 @@ class _AdminPanelState extends State<AdminPanel> {
 
     context
         .read<DesertsCubit>()
-        .addDesert(name: name, imageFile: imageFile, price: price);
+        .addDesert(name: name!, imageFile: imageFile, price: price!);
 
     setState(() {
       price = "";
       name = "";
       imageFile = null as Uint8List;
-      _controller.clear();
-      _controller2.clear();
     });
   }
 
@@ -74,14 +72,12 @@ class _AdminPanelState extends State<AdminPanel> {
 
     context
         .read<DesertsCubit>()
-        .editDesert(name: name, id: _docId!, price: price);
+        .editDesert(name: name!, id: _docId!, price: price!);
 
     setState(() {
       price = "";
       name = "";
       imageUrl = null;
-      _controller.clear();
-      _controller2.clear();
     });
   }
 
@@ -103,8 +99,17 @@ class _AdminPanelState extends State<AdminPanel> {
       price = "";
       name = "";
       imageUrl = null;
-      _controller.clear();
-      _controller2.clear();
+    });
+  }
+
+  void editDesert({required String name, required String price, required String imageUrl, required String docId}){
+    setState(() {
+      this.name = name;
+      this.price = price;
+      this.imageUrl = imageUrl;
+      this._docId = docId;
+      _controller.text = name;
+      _controller2.text = price;
     });
   }
 
@@ -116,6 +121,8 @@ class _AdminPanelState extends State<AdminPanel> {
 
   @override
   void dispose() {
+    _controller.dispose();
+    _controller2.dispose();
     _priceFocusNode.dispose();
     super.dispose();
   }
@@ -146,7 +153,7 @@ class _AdminPanelState extends State<AdminPanel> {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 100),
-                    child: Row(
+                    child: state is DesertsAdd ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
@@ -198,6 +205,58 @@ class _AdminPanelState extends State<AdminPanel> {
                           ),
                         ),
                       ],
+                    ) : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              context.read<DesertsCubit>()
+                                  .desertPlusOne();
+                            });
+                          },
+                          child: Text(
+                            "Добавление товара",
+                            style: TextStyle(
+                              shadows: <Shadow>[
+                                Shadow(
+                                  offset: Offset(2, 2),
+                                  blurRadius: 1,
+                                ),
+                              ],
+                              color: Colors.white,
+                              fontSize: 27,
+                              fontFamily: "IBMPlexSerif",
+                              letterSpacing: 0.07,
+                            ),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              context.read<DesertsCubit>()
+                                  .deserEditState();
+                            });
+                            print(state);
+                          },
+                          child: Text(
+                            "Редактирование и удаление товара",
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              shadows: <Shadow>[
+                                Shadow(
+                                  offset: Offset(2, 2),
+                                  blurRadius: 1,
+                                ),
+                              ],
+                              color: Colors.white,
+                              fontSize: 27,
+                              fontFamily: "IBMPlexSerif",
+                              letterSpacing: 0.07,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(
@@ -216,209 +275,196 @@ class _AdminPanelState extends State<AdminPanel> {
                             border: Border.all(color: Colors.white, width: 5),
                             borderRadius: BorderRadius.circular(45),
                           ),
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 35,
-                                ),
-                                state is DesertsAdd ?
-                                imageFile == null
-                                    ? GestureDetector(
-                                  onTap: () {
-                                    getImage();
-                                  },
-                                  child: Container(
+                          child: SingleChildScrollView(
+                            child: Form(
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 35,
+                                  ),
+                                  state is DesertsAdd ?
+                                  imageFile == null
+                                      ? GestureDetector(
+                                    onTap: () {
+                                      getImage();
+                                    },
+                                    child: Container(
+                                      width: 352,
+                                      height: 287,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.white,
+                                            width: 1),
+                                        borderRadius:
+                                        BorderRadius.circular(70),
+                                      ),
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          "Добавить фото",
+                                          style: TextStyle(
+                                            shadows: <Shadow>[
+                                              Shadow(
+                                                offset: Offset(2, 2),
+                                                blurRadius: 1,
+                                              ),
+                                            ],
+                                            color: Colors.white,
+                                            fontSize: 27,
+                                            fontFamily: "IBMPlexSerif",
+                                            letterSpacing: 0.07,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                      : Container(
+                                    child: Image.memory(imageFile!),
+                                  ) :
+                                  imageUrl == null ? Container(
                                     width: 352,
                                     height: 287,
                                     decoration: BoxDecoration(
                                       border: Border.all(
-                                          color: Colors.white,
-                                          width: 1),
-                                      borderRadius:
-                                      BorderRadius.circular(70),
+                                          width: 1, color: Colors.white),
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),) :
+                                  Expanded(
+                                    child: Container(
+                                      child: Image.network(imageUrl!, width: 330, height: 295,),
                                     ),
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "Добавить фото",
-                                        style: TextStyle(
-                                          shadows: <Shadow>[
-                                            Shadow(
-                                              offset: Offset(2, 2),
-                                              blurRadius: 1,
-                                            ),
-                                          ],
-                                          color: Colors.white,
-                                          fontSize: 27,
-                                          fontFamily: "IBMPlexSerif",
-                                          letterSpacing: 0.07,
+                                  ),
+                                  SizedBox(
+                                    height: 35,
+                                  ),
+                                  Text(
+                                    "Описание",
+                                    style: TextStyle(
+                                      shadows: <Shadow>[
+                                        Shadow(
+                                          offset: Offset(2, 2),
+                                          blurRadius: 1,
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                    : Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 1, color: Colors.white),
-                                    borderRadius:
-                                    BorderRadius.circular(50),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(50.0),
-                                    child: Image.memory(imageFile!),
-                                  ),
-                                ) :
-                                imageUrl == null ? Container(
-                                  width: 352,
-                                  height: 287,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 1, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),) :
-                                Container(
-                                  width: 352,
-                                  height: 287,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      fit: BoxFit.contain,
-                                      alignment: FractionalOffset.topCenter,
-                                      image: NetworkImage(imageUrl!),
-                                    ),
-                                    border: Border.all(
-                                        width: 1, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 35,
-                                ),
-                                Text(
-                                  "Описание",
-                                  style: TextStyle(
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(2, 2),
-                                        blurRadius: 1,
-                                      ),
-                                    ],
-                                    color: Colors.white,
-                                    fontSize: 27,
-                                    fontFamily: "IBMPlexSerif",
-                                    letterSpacing: 0.07,
-                                  ),
-                                ),
-                                //name
-                                SizedBox(
-                                  width: 400,
-                                  child: TextFormField(
-                                    controller: _controller,
-                                    style: const TextStyle(
-                                      color: Color(0xFF3A1C1E),
-                                      fontFamily: "IBMPlexSerif",
-                                      fontSize: 32,
-                                    ),
-                                    keyboardType: TextInputType.text,
-                                    decoration: InputDecoration(
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.transparent,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(35),
-                                        borderSide: BorderSide(
-                                            color: Colors.white, width: 2.0),
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return "Необходимо ввести название десерта";
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (value) {
-                                      name = value;
-                                    },
-                                    onSaved: (value) {
-                                      name = value!;
-                                    },
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 35,
-                                ),
-                                Text(
-                                  "Цена",
-                                  style: TextStyle(
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(2, 2),
-                                        blurRadius: 1,
-                                      ),
-                                    ],
-                                    color: Colors.white,
-                                    fontSize: 27,
-                                    fontFamily: "IBMPlexSerif",
-                                    letterSpacing: 0.07,
-                                  ),
-                                ),
-                                //price
-                                SizedBox(
-                                  width: 400,
-                                  child: TextFormField(
-                                    controller: _controller2,
-                                    style: const TextStyle(
-                                      color: Color(0xFF3A1C1E),
-                                      fontFamily: "IBMPlexSerif",
-                                      fontSize: 32,
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.transparent,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(35),
-                                        borderSide: BorderSide(
-                                            color: Colors.white, width: 2.0),
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return "Необходимо ввести цену";
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (value) {
-                                      price = value;
-                                    },
-                                    onSaved: (value) {
-                                      price = value!;
-                                    },
-                                  ),
-                                ),
-                                imageUrl != null ? Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: TextButton(
-                                    onPressed: (){
-                                      _submitDel();
-                                    },
-                                    child: Text("Удалить", style: TextStyle(
-                                      fontSize: 20,
-                                      fontFamily: "IBMPlexSerif",
+                                      ],
                                       color: Colors.white,
-                                    ),),
+                                      fontSize: 27,
+                                      fontFamily: "IBMPlexSerif",
+                                      letterSpacing: 0.07,
+                                    ),
                                   ),
-                                ) : Container(),
-                              ],
+                                  //name
+                                  SizedBox(
+                                    width: 400,
+                                    child: TextFormField(
+                                      controller: _controller,
+                                      style: const TextStyle(
+                                        color: Color(0xFF3A1C1E),
+                                        fontFamily: "IBMPlexSerif",
+                                        fontSize: 32,
+                                      ),
+                                      keyboardType: TextInputType.text,
+                                      decoration: InputDecoration(
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.transparent,
+                                          ),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(35),
+                                          borderSide: BorderSide(
+                                              color: Colors.white, width: 2.0),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return "Необходимо ввести название десерта";
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (value) {
+                                        name = value;
+                                      },
+                                      onSaved: (value) {
+                                        name = value!;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 35,
+                                  ),
+                                  Text(
+                                    "Цена",
+                                    style: TextStyle(
+                                      shadows: <Shadow>[
+                                        Shadow(
+                                          offset: Offset(2, 2),
+                                          blurRadius: 1,
+                                        ),
+                                      ],
+                                      color: Colors.white,
+                                      fontSize: 27,
+                                      fontFamily: "IBMPlexSerif",
+                                      letterSpacing: 0.07,
+                                    ),
+                                  ),
+                                  //price
+                                  SizedBox(
+                                    width: 400,
+                                    child: TextFormField(
+                                      controller: _controller2,
+                                      style: const TextStyle(
+                                        color: Color(0xFF3A1C1E),
+                                        fontFamily: "IBMPlexSerif",
+                                        fontSize: 32,
+                                      ),
+                                      decoration: InputDecoration(
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.transparent,
+                                          ),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(35),
+                                          borderSide: BorderSide(
+                                              color: Colors.white, width: 2.0),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return "Необходимо ввести цену";
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (value) {
+                                        price = value;
+                                      },
+                                      onSaved: (value) {
+                                        price = value!;
+                                      },
+                                    ),
+                                  ),
+                                  imageUrl != null ? Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: TextButton(
+                                      onPressed: (){
+                                        setState(() {
+                                          _submitDel();
+                                          _controller.clear();
+                                          _controller2.clear();
+                                        });
+                                      },
+                                      child: Text("Удалить", style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: "IBMPlexSerif",
+                                        color: Colors.white,
+                                      ),),
+                                    ),
+                                  ) : Container(),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -426,9 +472,13 @@ class _AdminPanelState extends State<AdminPanel> {
                           children: [
                             IconButton(
                                 onPressed: () {
-                                  state is DesertsAdd ?
-                                  _submit(imageFile: imageFile!) :
-                                  _submitEdit();
+                                  setState(() {
+                                    state is DesertsAdd ?
+                                    _submit(imageFile: imageFile!) :
+                                    _submitEdit();
+                                    _controller.clear();
+                                    _controller2.clear();
+                                  });
                                 },
                                 icon: Icon(Icons.add))
                           ],
@@ -486,54 +536,42 @@ class _AdminPanelState extends State<AdminPanel> {
                                       );
                                       print(desrt.imageUrl);
 
-                                      return state is DesertsAdd ? Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.end,
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Container(
-                                            width: 253,
-                                            height: 288,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                fit: BoxFit.contain,
-                                                alignment: FractionalOffset
-                                                    .topCenter,
-                                                image: NetworkImage(
-                                                    desrt.imageUrl),
+                                      return state is DesertsAdd ? Container(
+                                        width: 350,
+                                        height: 300,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.end,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Expanded(child: Image(image: NetworkImage(desrt.imageUrl),)),
+                                            Text(
+                                              desrt.description,
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontFamily: "IBMPlexSerif",
+                                                color: Colors.white,
                                               ),
                                             ),
-                                          ),
-                                          Text(
-                                            desrt.description,
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontFamily: "IBMPlexSerif",
-                                              color: Colors.white,
+                                            SizedBox(
+                                              height: 5,
                                             ),
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            "${desrt.price} руб",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontFamily: "IBMPlexSerif",
-                                              color: Colors.white,
+                                            Text(
+                                              "${desrt.price} руб",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontFamily: "IBMPlexSerif",
+                                                color: Colors.white,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ) : GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            name = desrt.description;
-                                            price = desrt.price;
-                                            _docId = desrt.id;
-                                            imageUrl = desrt.imageUrl;
-                                            //TODO: open card in container
+                                            editDesert(name: desrt.description, price: desrt.price, imageUrl: desrt.imageUrl, docId: desrt.id);
                                           });
                                         },
                                         child: Card(
@@ -546,20 +584,7 @@ class _AdminPanelState extends State<AdminPanel> {
                                               CrossAxisAlignment.center,
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                Container(
-                                                  width: 253,
-                                                  height: 288,
-                                                  decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                      fit: BoxFit.contain,
-                                                      alignment:
-                                                      FractionalOffset
-                                                          .topCenter,
-                                                      image: NetworkImage(
-                                                          desrt.imageUrl),
-                                                    ),
-                                                  ),
-                                                ),
+                                                Expanded(child: Image(image: NetworkImage(desrt.imageUrl),)),
                                                 Text(
                                                   desrt.description,
                                                   style: TextStyle(
