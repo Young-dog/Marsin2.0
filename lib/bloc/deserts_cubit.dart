@@ -8,9 +8,9 @@ import 'package:firebase_storage/firebase_storage.dart' as fires;
 part 'deserts_state.dart';
 
 class DesertsCubit extends Cubit<DesertsState> {
-  DesertsCubit() : super(DesertsAdd());
+  DesertsCubit() : super(const DesertsAdd());
 
-  Future<void> addDesert({required String name, required Uint8List imageFile, required String price}) async {
+  Future<void> addDesert({required String name, required Uint8List imageFile, required String price, required String category}) async {
     late String imageUrl;
     print("Имя - $name\nЦена - $price\n фото - $imageFile");
     if (name.trim().isNotEmpty) {
@@ -32,11 +32,11 @@ class DesertsCubit extends Cubit<DesertsState> {
       "urlImage": imageUrl,
       "name": name,
       "price": price,
+      "category": category,
     }).then((docRef) => docRef.update({"desertId": docRef.id}));
 
     print(imageUrl);
 
-    emit(DesertsAdd());
   }
 
   Future<void> editDesert({required String id, required String name, required String price}) async{
@@ -51,12 +51,12 @@ class DesertsCubit extends Cubit<DesertsState> {
     await FirebaseFirestore.instance.collection("deserts").doc(docId).delete();
   }
 
-  void desertPlusOne() {
-    emit(DesertsAdd());
+  void desertAddState() {
+    emit(const DesertsAdd());
   }
 
-  void deserEditState() {
-    emit(DesertsEdit());
+  void desertEditState() {
+    emit(const DesertsEdit());
   }
 
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:marsin/bloc/deserts_cubit.dart';
-import 'package:marsin/models/desrt.dart';
+import 'package:marsin/models/desert_model.dart';
 import 'package:marsin/screens/home_page.dart';
 import '../../utils/links.dart';
 
@@ -20,21 +20,59 @@ class AdminPanel extends StatefulWidget {
 class _AdminPanelState extends State<AdminPanel> {
   final _formKey = GlobalKey<FormState>();
 
-  String name = "";
-  String price = "";
-  Uint8List? imageFile;
+  String _heading = "Добавление товара";
+  final List<String> _modes = [
+    "Добавление товара",
+    "Редактирование и удаление товара"
+  ];
+  String _type = "Фигурные наборы";
+  final List<String> _types = ["Фигурные наборы", "Букеты"];
+  String _dropDownValue = "Фигурные наборы";
+
+  List<DropdownMenuItem<String>> get dropdownItems {
+    List<DropdownMenuItem<String>> menuItems = [
+      DropdownMenuItem(child: Text("Букеты"), value: "Букеты"),
+      DropdownMenuItem(
+          child: Text("Фигурные наборы"), value: "Фигурные наборы"),
+    ];
+    return menuItems;
+  }
+
   String? _docId;
-  String? imageUrl;
+  String? _name;
+  String? _price;
+  String? _imageUrl;
+  Uint8List? _imageFile;
+
   late final _priceFocusNode;
-  final _controller = TextEditingController();
-  final _controller2 = TextEditingController();
+  final _controllerName = TextEditingController();
+  final _controllerPrice = TextEditingController();
 
-  //Получение изображения
+  CollectionReference _collectionReference =
+      FirebaseFirestore.instance.collection("deserts");
+  var _deserts;
+
+  // Получаем товары из БД
+  Future<void> getProducts() async {
+    QuerySnapshot querySnapshot = await _collectionReference.get();
+    _deserts = querySnapshot.docs.map((doc) => doc.data()).toList();
+    print(_deserts);
+  }
+
+  // Получаем изображение с устройства пользователя
   Future<void> getImage() async {
-    imageFile = await ImagePickerWeb.getImageAsBytes();
-    setState(() {
+    _imageFile = (await ImagePickerWeb.getImageAsBytes())!;
+    setState(() {});
+  }
 
-    });
+  //Сброс значений
+  void _reset() {
+    _name = null;
+    _price = null;
+    _imageUrl = null;
+    _imageFile = null;
+    _controllerName.clear();
+    _controllerPrice.clear();
   }
 
   //Добавление товара
@@ -48,18 +86,18 @@ class _AdminPanelState extends State<AdminPanel> {
 
     _formKey.currentState!.save();
 
-    context
-        .read<DesertsCubit>()
-        .addDesert(name: name!, imageFile: imageFile, price: price!);
+    context.read<DesertsCubit>().addDesert(
+        name: _name!,
+        imageFile: imageFile,
+        price: _price!,
+        category: _dropDownValue);
 
     setState(() {
-      price = "";
-      name = "";
-      imageFile = null as Uint8List;
+      _reset();
     });
   }
 
-  //Редактирвоание товара
+  //Сохранение отредактированных полей в firebase
   void _submitEdit() {
     FocusScope.of(context).unfocus();
 
@@ -72,16 +110,31 @@ class _AdminPanelState extends State<AdminPanel> {
 
     context
         .read<DesertsCubit>()
-        .editDesert(name: name!, id: _docId!, price: price!);
+        .editDesert(name: _name!, id: _docId!, price: _price!);
 
     setState(() {
-      price = "";
-      name = "";
-      imageUrl = null;
+      _reset();
     });
   }
 
-  void _submitDel(){
+  //Редактирование товара
+  void _editDesert(
+      {required String name,
+      required String price,
+      required String imageUrl,
+      required String docId}) {
+    setState(() {
+      this._name = name;
+      this._price = price;
+      this._imageUrl = imageUrl;
+      _docId = docId;
+      _controllerName.text = name;
+      _controllerPrice.text = price;
+    });
+  }
+
+  //Удаление товара
+  void _delDesert() {
     FocusScope.of(context).unfocus();
 
     if (!_formKey.currentState!.validate()) {
@@ -91,44 +144,29 @@ class _AdminPanelState extends State<AdminPanel> {
 
     _formKey.currentState!.save();
 
-    context
-        .read<DesertsCubit>()
-        .delDesert(docId: _docId!);
+    context.read<DesertsCubit>().delDesert(docId: _docId!);
 
-    setState(() {
-      price = "";
-      name = "";
-      imageUrl = null;
-    });
-  }
-
-  void editDesert({required String name, required String price, required String imageUrl, required String docId}){
-    setState(() {
-      this.name = name;
-      this.price = price;
-      this.imageUrl = imageUrl;
-      this._docId = docId;
-      _controller.text = name;
-      _controller2.text = price;
-    });
+    _reset();
   }
 
   @override
   void initState() {
     _priceFocusNode = FocusNode();
+    getProducts();
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
-    _controller2.dispose();
     _priceFocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    double wh = MediaQuery.of(context).size.width;
+    double hh = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: BlocBuilder<DesertsCubit, DesertsState>(
         builder: (context, state) {
@@ -141,351 +179,315 @@ class _AdminPanelState extends State<AdminPanel> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  state is DesertsAdd ? Text(
-                    "Добавление товара",
-                    style: bold,
-                  ) : Text(
-                    "Редактирование товара",
+                  //Заголовок
+                  Text(
+                    _heading,
                     style: bold,
                   ),
-                  SizedBox(
-                    height: 35,
-                  ),
+                  sizedBox,
+                  //Выбор режима (добавление/редактирование)
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 100),
-                    child: state is DesertsAdd ? Row(
+                    padding: const EdgeInsets.symmetric(horizontal: 100),
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
                           onPressed: () {
                             setState(() {
-                              context.read<DesertsCubit>()
-                                  .desertPlusOne();
+                              _reset();
+                              _heading = _modes[0];
+                              context.read<DesertsCubit>().desertAddState();
                             });
                           },
-                          child: Text(
-                            "Добавление товара",
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              shadows: <Shadow>[
-                                Shadow(
-                                  offset: Offset(2, 2),
-                                  blurRadius: 1,
+                          child: _heading == _modes[0]
+                              ? Text(
+                                  _modes[0],
+                                  style: styleForModesY,
+                                )
+                              : Text(
+                                  _modes[0],
+                                  style: styleForModesN,
                                 ),
-                              ],
-                              color: Colors.white,
-                              fontSize: 27,
-                              fontFamily: "IBMPlexSerif",
-                              letterSpacing: 0.07,
-                            ),
-                          ),
                         ),
                         TextButton(
                           onPressed: () {
                             setState(() {
-                              context.read<DesertsCubit>()
-                                  .deserEditState();
-                            });
-                            print(state);
-                          },
-                          child: Text(
-                            "Редактирование и удаление товара",
-                            style: TextStyle(
-                              shadows: <Shadow>[
-                                Shadow(
-                                  offset: Offset(2, 2),
-                                  blurRadius: 1,
-                                ),
-                              ],
-                              color: Colors.white,
-                              fontSize: 27,
-                              fontFamily: "IBMPlexSerif",
-                              letterSpacing: 0.07,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ) : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              context.read<DesertsCubit>()
-                                  .desertPlusOne();
+                              _reset();
+                              _heading = _modes[1];
+                              context.read<DesertsCubit>().desertEditState();
                             });
                           },
-                          child: Text(
-                            "Добавление товара",
-                            style: TextStyle(
-                              shadows: <Shadow>[
-                                Shadow(
-                                  offset: Offset(2, 2),
-                                  blurRadius: 1,
+                          child: _heading == _modes[1]
+                              ? Text(
+                                  _modes[1],
+                                  style: styleForModesY,
+                                )
+                              : Text(
+                                  _modes[1],
+                                  style: styleForModesN,
                                 ),
-                              ],
-                              color: Colors.white,
-                              fontSize: 27,
-                              fontFamily: "IBMPlexSerif",
-                              letterSpacing: 0.07,
-                            ),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              context.read<DesertsCubit>()
-                                  .deserEditState();
-                            });
-                            print(state);
-                          },
-                          child: Text(
-                            "Редактирование и удаление товара",
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              shadows: <Shadow>[
-                                Shadow(
-                                  offset: Offset(2, 2),
-                                  blurRadius: 1,
-                                ),
-                              ],
-                              color: Colors.white,
-                              fontSize: 27,
-                              fontFamily: "IBMPlexSerif",
-                              letterSpacing: 0.07,
-                            ),
-                          ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 35,
-                  ),
+                  sizedBox,
+                  //Взаимодествие и отображение товаров
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 60),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        //Добавление или редактирование одного товара
                         Container(
-                          width: MediaQuery.of(context).size.width / 4,
-                          height: MediaQuery.of(context).size.height / 1.3,
+                          width: wh / 4,
+                          height: hh / 1.3,
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.white, width: 5),
                             borderRadius: BorderRadius.circular(45),
                           ),
-                          child: SingleChildScrollView(
-                            child: Form(
-                              key: _formKey,
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 35,
-                                  ),
-                                  state is DesertsAdd ?
-                                  imageFile == null
-                                      ? GestureDetector(
-                                    onTap: () {
-                                      getImage();
-                                    },
-                                    child: Container(
-                                      width: 352,
-                                      height: 287,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.white,
-                                            width: 1),
-                                        borderRadius:
-                                        BorderRadius.circular(70),
-                                      ),
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "Добавить фото",
-                                          style: TextStyle(
-                                            shadows: <Shadow>[
-                                              Shadow(
-                                                offset: Offset(2, 2),
-                                                blurRadius: 1,
+                          child: Padding(
+                            padding: EdgeInsets.all(3),
+                            child: SingleChildScrollView(
+                              child: Form(
+                                key: _formKey,
+                                child: Column(
+                                  children: [
+                                    sizedBox,
+                                    //Картинка
+                                    state is DesertsAdd
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              getImage();
+                                            },
+                                            child: Container(
+                                              width: 352,
+                                              height: 287,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: Colors.white,
+                                                    width: 1),
+                                                borderRadius:
+                                                    BorderRadius.circular(70),
                                               ),
+                                              child: _imageFile == null
+                                                  ? Align(
+                                                      alignment: Alignment.center,
+                                                      child: Text(
+                                                        "Добавить фото",
+                                                        style: styleForModesN,
+                                                      ),
+                                                    )
+                                                  : GestureDetector(
+                                                      onTap: () {
+                                                        getImage();
+                                                      },
+                                                      child: Container(
+                                                        child: Image.memory(
+                                                            _imageFile!),
+                                                      ),
+                                                    ),
+                                            ),
+                                          )
+                                        : Container(
+                                            width: 352,
+                                            height: 287,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  width: 1, color: Colors.white),
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                            ),
+                                            child: _imageUrl != null
+                                                ? Expanded(
+                                                    child: Image(
+                                                        image: NetworkImage(
+                                                            _imageUrl!)))
+                                                : Container(),
+                                          ),
+                                    sizedBox,
+                                    //Название
+                                    Text(
+                                      "Описание",
+                                      style: styleForModesN,
+                                    ),
+                                    SizedBox(
+                                      width: 400,
+                                      child: TextFormField(
+                                        controller: _controllerName,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: "IBMPlexSerif",
+                                          fontSize: 32,
+                                        ),
+                                        keyboardType: TextInputType.text,
+                                        decoration: InputDecoration(
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.transparent,
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(35),
+                                            borderSide: BorderSide(
+                                                color: Colors.white, width: 2.0),
+                                          ),
+                                        ),
+                                        textInputAction: TextInputAction.done,
+                                        onFieldSubmitted: (_) {
+                                          FocusScope.of(context)
+                                              .requestFocus(_priceFocusNode);
+                                        },
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return "Необходимо ввести название десерта";
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (value) {
+                                          _name = value!;
+                                        },
+                                      ),
+                                    ),
+                                    //Цена
+                                    Text(
+                                      "Цена",
+                                      style: styleForModesN,
+                                    ),
+                                    SizedBox(
+                                      width: 400,
+                                      child: TextFormField(
+                                        focusNode: _priceFocusNode,
+                                        controller: _controllerPrice,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: "IBMPlexSerif",
+                                          fontSize: 32,
+                                        ),
+                                        keyboardType: TextInputType.text,
+                                        decoration: InputDecoration(
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Colors.transparent,
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(35),
+                                            borderSide: BorderSide(
+                                                color: Colors.white, width: 2.0),
+                                          ),
+                                        ),
+                                        textInputAction: TextInputAction.done,
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return "Необходимо ввести цену";
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (value) {
+                                          _price = value!;
+                                        },
+                                      ),
+                                    ),
+                                    sizedBox,
+                                    //Выбор категории либо удаления товара (зависит от режима, в котором работаем)
+                                    state is DesertsAdd
+                                        ? Column(
+                                            children: [
+                                              Text(
+                                                "Категория",
+                                                style: styleForModesN,
+                                              ),
+                                              SizedBox(
+                                                width: 400,
+                                                child: DropdownButtonFormField(
+                                                    decoration: InputDecoration(
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                35),
+                                                        borderSide: BorderSide(
+                                                            color: Colors.white,
+                                                            width: 2.0),
+                                                      ),
+                                                      border: OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                35),
+                                                        borderSide: BorderSide(
+                                                            color: Colors.white,
+                                                            width: 2.0),
+                                                      ),
+                                                      filled: true,
+                                                    ),
+                                                    dropdownColor: Colors.white,
+                                                    focusColor: Colors.white,
+                                                    iconEnabledColor:
+                                                        Colors.white,
+                                                    value: _dropDownValue,
+                                                    onChanged:
+                                                        (String? newValue) {
+                                                      setState(() {
+                                                        _dropDownValue =
+                                                            newValue!;
+                                                      });
+                                                    },
+                                                    items: dropdownItems),
+                                              ),
+                                              sizedBox,
                                             ],
-                                            color: Colors.white,
-                                            fontSize: 27,
-                                            fontFamily: "IBMPlexSerif",
-                                            letterSpacing: 0.07,
+                                          )
+                                        : Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 20),
+                                            child: Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: _imageUrl != null
+                                                  ? TextButton(
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _delDesert();
+                                                        });
+                                                      },
+                                                      child: const Text(
+                                                        "Удалить",
+                                                        style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontFamily:
+                                                              "IBMPlexSerif",
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Container(),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                      : Container(
-                                    child: Image.memory(imageFile!),
-                                  ) :
-                                  imageUrl == null ? Container(
-                                    width: 352,
-                                    height: 287,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1, color: Colors.white),
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),) :
-                                  Expanded(
-                                    child: Container(
-                                      child: Image.network(imageUrl!, width: 330, height: 295,),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 35,
-                                  ),
-                                  Text(
-                                    "Описание",
-                                    style: TextStyle(
-                                      shadows: <Shadow>[
-                                        Shadow(
-                                          offset: Offset(2, 2),
-                                          blurRadius: 1,
-                                        ),
-                                      ],
-                                      color: Colors.white,
-                                      fontSize: 27,
-                                      fontFamily: "IBMPlexSerif",
-                                      letterSpacing: 0.07,
-                                    ),
-                                  ),
-                                  //name
-                                  SizedBox(
-                                    width: 400,
-                                    child: TextFormField(
-                                      controller: _controller,
-                                      style: const TextStyle(
-                                        color: Color(0xFF3A1C1E),
-                                        fontFamily: "IBMPlexSerif",
-                                        fontSize: 32,
-                                      ),
-                                      keyboardType: TextInputType.text,
-                                      decoration: InputDecoration(
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Colors.transparent,
-                                          ),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(35),
-                                          borderSide: BorderSide(
-                                              color: Colors.white, width: 2.0),
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return "Необходимо ввести название десерта";
-                                        }
-                                        return null;
-                                      },
-                                      onChanged: (value) {
-                                        name = value;
-                                      },
-                                      onSaved: (value) {
-                                        name = value!;
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 35,
-                                  ),
-                                  Text(
-                                    "Цена",
-                                    style: TextStyle(
-                                      shadows: <Shadow>[
-                                        Shadow(
-                                          offset: Offset(2, 2),
-                                          blurRadius: 1,
-                                        ),
-                                      ],
-                                      color: Colors.white,
-                                      fontSize: 27,
-                                      fontFamily: "IBMPlexSerif",
-                                      letterSpacing: 0.07,
-                                    ),
-                                  ),
-                                  //price
-                                  SizedBox(
-                                    width: 400,
-                                    child: TextFormField(
-                                      controller: _controller2,
-                                      style: const TextStyle(
-                                        color: Color(0xFF3A1C1E),
-                                        fontFamily: "IBMPlexSerif",
-                                        fontSize: 32,
-                                      ),
-                                      decoration: InputDecoration(
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Colors.transparent,
-                                          ),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(35),
-                                          borderSide: BorderSide(
-                                              color: Colors.white, width: 2.0),
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return "Необходимо ввести цену";
-                                        }
-                                        return null;
-                                      },
-                                      onChanged: (value) {
-                                        price = value;
-                                      },
-                                      onSaved: (value) {
-                                        price = value!;
-                                      },
-                                    ),
-                                  ),
-                                  imageUrl != null ? Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: TextButton(
-                                      onPressed: (){
-                                        setState(() {
-                                          _submitDel();
-                                          _controller.clear();
-                                          _controller2.clear();
-                                        });
-                                      },
-                                      child: Text("Удалить", style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "IBMPlexSerif",
-                                        color: Colors.white,
-                                      ),),
-                                    ),
-                                  ) : Container(),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
+                        //Кнопка Добавление товара
                         Column(
                           children: [
                             IconButton(
                                 onPressed: () {
                                   setState(() {
-                                    state is DesertsAdd ?
-                                    _submit(imageFile: imageFile!) :
-                                    _submitEdit();
-                                    _controller.clear();
-                                    _controller2.clear();
+                                    state is DesertsAdd
+                                        ? _submit(imageFile: _imageFile!)
+                                        : _submitEdit();
                                   });
                                 },
                                 icon: Icon(Icons.add))
                           ],
                         ),
                         Container(
-                            width: MediaQuery.of(context).size.width / 1.7,
-                            height: MediaQuery.of(context).size.height / 1.3,
+                            width: wh / 1.7,
+                            height: hh / 1.3,
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: Colors.white,
@@ -493,142 +495,246 @@ class _AdminPanelState extends State<AdminPanel> {
                               ),
                               borderRadius: BorderRadius.circular(45),
                             ),
-                            child: StreamBuilder<QuerySnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection("deserts")
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting ||
-                                    snapshot.connectionState ==
-                                        ConnectionState.none) {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                    ),
-                                  );
-                                }
-                                if (snapshot.hasError) {
-                                  return Center(
-                                    child: Text(snapshot.hasError.toString()),
-                                  );
-                                }
-                                return GridView.builder(
-                                    gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                      mainAxisSpacing: 30,
-                                      crossAxisSpacing: 60,
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 1.5,
-                                    ),
-                                    itemCount:
-                                    snapshot.data?.docs.length ?? 0,
-                                    itemBuilder: (context, index) {
-                                      final QueryDocumentSnapshot doc =
-                                      snapshot.data!.docs[index];
-
-                                      final Desert desrt = Desert(
-                                        timestamp: doc["timestamp"] ?? 0,
-                                        price: doc["price"] ?? "0",
-                                        description: doc["name"] ?? "0",
-                                        imageUrl: doc["urlImage"] ?? " ",
-                                        id: doc["desertId"] ?? "0",
-                                      );
-                                      print(desrt.imageUrl);
-
-                                      return state is DesertsAdd ? Container(
-                                        width: 350,
-                                        height: 300,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.end,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Expanded(child: Image(image: NetworkImage(desrt.imageUrl),)),
-                                            Text(
-                                              desrt.description,
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontFamily: "IBMPlexSerif",
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              "${desrt.price} руб",
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontFamily: "IBMPlexSerif",
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ],
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _reset();
+                                              _type = _types[0];
+                                            });
+                                          },
+                                          child: _type == _types[0]
+                                              ? Text(
+                                                  _types[0],
+                                                  style: styleForModesY,
+                                                )
+                                              : Text(
+                                                  _types[0],
+                                                  style: styleForModesN,
+                                                ),
                                         ),
-                                      ) : GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            editDesert(name: desrt.description, price: desrt.price, imageUrl: desrt.imageUrl, docId: desrt.id);
-                                          });
-                                        },
-                                        child: Card(
-                                          elevation: 0,
-                                          color: Colors.transparent,
-                                          child: Column(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Expanded(child: Image(image: NetworkImage(desrt.imageUrl),)),
-                                                Text(
-                                                  desrt.description,
-                                                  style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontFamily: "IBMPlexSerif",
-                                                    color: Colors.white,
-                                                  ),
+                                        TextButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _reset();
+                                              _type = _types[1];
+                                            });
+                                          },
+                                          child: _type == _types[1]
+                                              ? Text(
+                                                  _types[1],
+                                                  style: styleForModesY,
+                                                )
+                                              : Text(
+                                                  _types[1],
+                                                  style: styleForModesN,
                                                 ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text(
-                                                  "${desrt.price} руб",
-                                                  style: TextStyle(
-                                                    fontSize: 20,
-                                                    fontFamily: "IBMPlexSerif",
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ]),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection("deserts")
+                                          .snapshots(),
+                                      builder: (context, snapshot) {
+                                    int countCurlySets = 0;
+                                    int countBouquets = 0;
+                                    int len = snapshot.data!.docs.length ?? 0;
+
+                                    //Считаем кол-во товаров разных категорий
+                                    for (int i = 0; i < len; i++) {
+                                      if (snapshot.data!.docs[i]["category"] ==
+                                          _types[0]) {
+                                        countCurlySets++;
+                                      } else {
+                                        countBouquets++;
+                                      }
+                                    }
+
+                                    print(countCurlySets);
+                                    print(countBouquets);
+
+                                    //Ожидание
+                                    if (snapshot.connectionState ==
+                                            ConnectionState.waiting ||
+                                        snapshot.connectionState ==
+                                            ConnectionState.none) {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
                                         ),
                                       );
-                                    });
-                              },
+                                    }
+
+                                    //Ошибка
+                                    if (snapshot.hasError) {
+                                      return Center(
+                                        child: Text(snapshot.hasError.toString()),
+                                      );
+                                    }
+
+                                    getProducts();
+
+                                    return SizedBox(
+                                        width: wh / 1.8,
+                                        height: hh /1.4,
+                                        child: GridView.builder(
+                                            gridDelegate:
+                                                SliverGridDelegateWithFixedCrossAxisCount(
+                                              mainAxisSpacing: 30,
+                                              crossAxisSpacing: 60,
+                                              crossAxisCount: 2,
+                                              childAspectRatio: 1.5,
+                                            ),
+                                            itemCount: _type == _types[0]
+                                                ? countCurlySets
+                                                : countBouquets,
+                                            itemBuilder: (context, index) {
+                                              final QueryDocumentSnapshot doc =
+                                                  snapshot.data!.docs[index];
+
+                                              final Desert desert = Desert(
+                                                timestamp: doc["timestamp"] ?? "",
+                                                price: doc["price"] ?? "0",
+                                                name: doc["name"] ?? "",
+                                                imageUrl: doc["urlImage"] ?? "",
+                                                id: doc["desertId"] ?? "",
+                                                category: doc["category"] ?? "",
+                                              );
+
+                                              if (state is DesertsAdd) {
+                                                if (_type == _deserts[index]["category"]) {
+                                                  return Container(
+                                                    width: 350,
+                                                    height: 300,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment.center,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Expanded(
+                                                          child: Image(
+                                                            image: NetworkImage(
+                                                                _deserts[index]["urlImage"]),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          _deserts[index]["name"],
+                                                          style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontFamily:
+                                                                "IBMPlexSerif",
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          "${_deserts[index]["price"]} руб",
+                                                          style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontFamily:
+                                                                "IBMPlexSerif",
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                }
+                                                return null;
+                                              }
+
+                                              print(_type);
+
+                                              if (state is DesertsEdit) {
+                                                if (_type == desert.category) {
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        _editDesert(
+                                                            name: desert.name,
+                                                            price: desert.price,
+                                                            imageUrl:
+                                                                desert.imageUrl,
+                                                            docId: desert.id);
+                                                      });
+                                                    },
+                                                    child: Card(
+                                                      elevation: 0,
+                                                      color: Colors.transparent,
+                                                      child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment.end,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Expanded(
+                                                              child: Image(
+                                                                image: NetworkImage(
+                                                                    desert
+                                                                        .imageUrl),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              desert.name,
+                                                              style: TextStyle(
+                                                                fontSize: 20,
+                                                                fontFamily:
+                                                                    "IBMPlexSerif",
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            Text(
+                                                              "${desert.price} руб",
+                                                              style: TextStyle(
+                                                                fontSize: 20,
+                                                                fontFamily:
+                                                                    "IBMPlexSerif",
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                          ]),
+                                                    ),
+                                                  );
+                                                }
+                                              }
+                                            }));
+                                  })
+                                ],
+                              ),
                             ))
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 35,
-                  ),
+                  sizedBox,
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: TextButton(
                       onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed(HomePage.id);
+                        Navigator.of(context).pushReplacementNamed(HomePage.id);
                       },
                       child: Text(
                         "Назад",
-                        style: TextStyle(
-                            fontFamily: "IBMPlexSerif",
-                            fontSize: 27,
-                            color: Colors.white),
+                        style: styleForModesN,
                       ),
                     ),
                   )
