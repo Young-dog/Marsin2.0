@@ -51,13 +51,23 @@ class _AdminPanelState extends State<AdminPanel> {
   CollectionReference _collectionReference =
       FirebaseFirestore.instance.collection("deserts");
   var _deserts;
+  // List _desertsBox = [];
+  // List _desertsBouq = [];
 
-  // Получаем товары из БД
-  Future<void> getProducts() async {
-    QuerySnapshot querySnapshot = await _collectionReference.get();
-    _deserts = querySnapshot.docs.map((doc) => doc.data()).toList();
-    print(_deserts);
-  }
+
+  // // Получаем товары из БД
+  // Future<void> getProducts() async {
+  //   QuerySnapshot querySnapshot = await _collectionReference.get();
+  //   _deserts = querySnapshot.docs.map((doc) => doc.data()).toList();
+  //   for(dynamic desert in _deserts){
+  //     if(desert["category"] == _types[0]){
+  //       _desertsBox.add(desert);
+  //     } else if (desert["category"] == _types[1]) {
+  //       _desertsBouq.add(desert);
+  //     }
+  //   }
+  //   print(_deserts);
+  // }
 
   // Получаем изображение с устройства пользователя
   Future<void> getImage() async {
@@ -145,19 +155,20 @@ class _AdminPanelState extends State<AdminPanel> {
     _formKey.currentState!.save();
 
     context.read<DesertsCubit>().delDesert(docId: _docId!);
-
     _reset();
   }
 
   @override
   void initState() {
     _priceFocusNode = FocusNode();
-    getProducts();
+    //getProducts();
     super.initState();
   }
 
   @override
   void dispose() {
+    _controllerName.dispose();
+    _controllerPrice.dispose();
     _priceFocusNode.dispose();
     super.dispose();
   }
@@ -542,12 +553,12 @@ class _AdminPanelState extends State<AdminPanel> {
                                   ),
                                   StreamBuilder<QuerySnapshot>(
                                       stream: FirebaseFirestore.instance
-                                          .collection("deserts")
+                                          .collection("deserts").where("category", isEqualTo: _type)
                                           .snapshots(),
                                       builder: (context, snapshot) {
                                     int countCurlySets = 0;
                                     int countBouquets = 0;
-                                    int len = snapshot.data!.docs.length ?? 0;
+                                    int len = snapshot.data!.docs.length;
 
                                     //Считаем кол-во товаров разных категорий
                                     for (int i = 0; i < len; i++) {
@@ -581,14 +592,12 @@ class _AdminPanelState extends State<AdminPanel> {
                                       );
                                     }
 
-                                    getProducts();
-
                                     return SizedBox(
                                         width: wh / 1.8,
                                         height: hh /1.4,
                                         child: GridView.builder(
                                             gridDelegate:
-                                                SliverGridDelegateWithFixedCrossAxisCount(
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
                                               mainAxisSpacing: 30,
                                               crossAxisSpacing: 60,
                                               crossAxisCount: 2,
@@ -598,9 +607,9 @@ class _AdminPanelState extends State<AdminPanel> {
                                                 ? countCurlySets
                                                 : countBouquets,
                                             itemBuilder: (context, index) {
-                                              final QueryDocumentSnapshot doc =
-                                                  snapshot.data!.docs[index];
 
+                                              final QueryDocumentSnapshot doc =
+                                              snapshot.data!.docs[index];
                                               final Desert desert = Desert(
                                                 timestamp: doc["timestamp"] ?? "",
                                                 price: doc["price"] ?? "0",
@@ -610,113 +619,110 @@ class _AdminPanelState extends State<AdminPanel> {
                                                 category: doc["category"] ?? "",
                                               );
 
-                                              if (state is DesertsAdd) {
-                                                if (_type == _deserts[index]["category"]) {
-                                                  return Container(
-                                                    width: 350,
-                                                    height: 300,
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment.center,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Expanded(
-                                                          child: Image(
-                                                            image: NetworkImage(
-                                                                _deserts[index]["urlImage"]),
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          _deserts[index]["name"],
-                                                          style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontFamily:
-                                                                "IBMPlexSerif",
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Text(
-                                                          "${_deserts[index]["price"]} руб",
-                                                          style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontFamily:
-                                                                "IBMPlexSerif",
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                }
-                                                return null;
-                                              }
-
                                               print(_type);
 
-                                              if (state is DesertsEdit) {
-                                                if (_type == desert.category) {
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        _editDesert(
-                                                            name: desert.name,
-                                                            price: desert.price,
-                                                            imageUrl:
-                                                                desert.imageUrl,
-                                                            docId: desert.id);
-                                                      });
-                                                    },
-                                                    child: Card(
-                                                      elevation: 0,
-                                                      color: Colors.transparent,
-                                                      child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment.end,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Image(
-                                                                image: NetworkImage(
-                                                                    desert
-                                                                        .imageUrl),
-                                                              ),
+                                                return state is DesertsAdd ? Container(
+                                                  width: 350,
+                                                  height: 300,
+                                                  child: Card(
+                                                    elevation: 0,
+                                                    color: Colors.transparent,
+                                                    child: Column(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                        mainAxisSize:
+                                                        MainAxisSize.min,
+                                                        children: [
+                                                          Expanded(
+                                                            child: Image(
+                                                              image: NetworkImage(
+                                                                  desert
+                                                                      .imageUrl),
                                                             ),
-                                                            Text(
-                                                              desert.name,
-                                                              style: TextStyle(
-                                                                fontSize: 20,
-                                                                fontFamily:
-                                                                    "IBMPlexSerif",
-                                                                color: Colors.white,
-                                                              ),
+                                                          ),
+                                                          Text(
+                                                            desert.name,
+                                                            style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontFamily:
+                                                              "IBMPlexSerif",
+                                                              color: Colors.white,
                                                             ),
-                                                            SizedBox(
-                                                              height: 5,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Text(
+                                                            "${desert.price} руб",
+                                                            style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontFamily:
+                                                              "IBMPlexSerif",
+                                                              color: Colors.white,
                                                             ),
-                                                            Text(
-                                                              "${desert.price} руб",
-                                                              style: TextStyle(
-                                                                fontSize: 20,
-                                                                fontFamily:
-                                                                    "IBMPlexSerif",
-                                                                color: Colors.white,
-                                                              ),
+                                                          ),
+                                                        ]),
+                                                  ),
+                                                ) :  GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      _editDesert(
+                                                          name: desert.name,
+                                                          price: desert.price,
+                                                          imageUrl:
+                                                          desert.imageUrl,
+                                                          docId: desert.id);
+                                                      print(desert.id);
+
+                                                    });
+                                                  },
+                                                  child: Card(
+                                                    elevation: 0,
+                                                    color: Colors.transparent,
+                                                    child: Column(
+                                                        mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                        mainAxisSize:
+                                                        MainAxisSize.min,
+                                                        children: [
+                                                          Expanded(
+                                                            child: Image(
+                                                              image: NetworkImage(
+                                                                  desert
+                                                                      .imageUrl),
                                                             ),
-                                                          ]),
-                                                    ),
-                                                  );
-                                                }
-                                              }
+                                                          ),
+                                                          Text(
+                                                            desert.name,
+                                                            style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontFamily:
+                                                              "IBMPlexSerif",
+                                                              color: Colors.white,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Text(
+                                                            "${desert.price} руб",
+                                                            style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontFamily:
+                                                              "IBMPlexSerif",
+                                                              color: Colors.white,
+                                                            ),
+                                                          ),
+                                                        ]),
+                                                  ),
+                                                );
+
                                             }));
                                   })
                                 ],
