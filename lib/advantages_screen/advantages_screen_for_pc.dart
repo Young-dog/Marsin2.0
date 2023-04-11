@@ -1,19 +1,25 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import '../utils/links.dart';
-import 'package:sizer/sizer.dart';
+import '../utils/styles.dart';
+part 'advantages_for_mobile.dart';
 
 class Advantages extends StatelessWidget {
   const Advantages({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double wh = MediaQuery.of(context).size.width;
+    double hh = MediaQuery.of(context).size.height;
+
     return Material(
       child: Container(
         decoration: BoxDecoration(
             gradient: backColor
         ),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        width: wh,
+        height: hh,
         child: Stack(
           children: [
             FractionallySizedBox(
@@ -44,8 +50,8 @@ class Advantages extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: MediaQuery.of(context).size.width / 4,
-                    height: MediaQuery.of(context).size.height * 0.75,
+                    width: wh / 4,
+                    height: hh * 0.75,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.white, width: 1),),
                     child: Row(
@@ -63,8 +69,8 @@ class Advantages extends StatelessWidget {
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.05,),
                   Container(
-                    width: MediaQuery.of(context).size.width / 4,
-                    height: MediaQuery.of(context).size.height * 0.75,
+                    width: wh / 4,
+                    height: hh * 0.75,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.white, width: 1)),
                     child: Row(
@@ -82,8 +88,8 @@ class Advantages extends StatelessWidget {
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.05,),
                   Container(
-                    width: MediaQuery.of(context).size.width / 4,
-                    height: MediaQuery.of(context).size.height * 0.75,
+                    width: wh / 4,
+                    height: hh * 0.75,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.white, width: 1)),
                     child: Row(

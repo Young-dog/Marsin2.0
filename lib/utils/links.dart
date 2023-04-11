@@ -30,12 +30,18 @@ dynamic logo = Padding(
 String imageFlowerForCard = "images/ChocoForStart.png";
 String chocoAboutUs = "images/ChocoAboutUs.png";
 final Gradient backColor = LinearGradient(
-  colors: [firstColor, secondColor,],
+  colors: [
+    firstColor,
+    secondColor,
+  ],
   begin: Alignment.centerLeft,
   end: Alignment.centerRight,
 );
 Gradient gradientForButton = LinearGradient(
-  colors: [test2, test1,],
+  colors: [
+    test2,
+    test1,
+  ],
   end: Alignment.bottomCenter,
   begin: Alignment.topCenter,
 );
@@ -114,22 +120,32 @@ TextStyle styleForModesY = TextStyle(
   letterSpacing: 0.07,
 );
 
-    TextStyle styleForModesN = TextStyle(
-shadows: <Shadow>[
-Shadow(
-offset: Offset(2, 2),
-blurRadius: 1,
-),
-],
-color: Colors.white,
-fontSize: 27,
-fontFamily: "IBMPlexSerif",
-letterSpacing: 0.07,
+TextStyle styleForModesN = TextStyle(
+  shadows: <Shadow>[
+    Shadow(
+      offset: Offset(2, 2),
+      blurRadius: 1,
+    ),
+  ],
+  color: Colors.white,
+  fontSize: 27,
+  fontFamily: "IBMPlexSerif",
+  letterSpacing: 0.07,
 );
 
-    SizedBox sizedBox =
-SizedBox(
-height: 35,
+TextStyle styleForField = TextStyle(
+fontSize: 20,
+fontFamily:
+"IBMPlexSerif",
+color: Colors.white,
+);
+
+SizedBox sizedBox = SizedBox(
+  height: 35,
+);
+
+SizedBox sizedBoxForMobile = SizedBox(
+  height: 25,
 );
 
 Color firstColor = Color(0xFF4E093A).withOpacity(0.9);

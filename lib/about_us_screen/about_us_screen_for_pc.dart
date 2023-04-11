@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
-
 import '../utils/links.dart';
+import '../utils/styles.dart';
+
+part 'about_us_screen_for_mobile.dart';
 
 class AboutUs extends StatelessWidget {
   const AboutUs({Key? key}) : super(key: key);

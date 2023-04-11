@@ -54,6 +54,8 @@ class NavBar extends StatelessWidget {
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.menu),
+              iconSize: 80,
+              color: Colors.white,
             ),
         ],
       ),

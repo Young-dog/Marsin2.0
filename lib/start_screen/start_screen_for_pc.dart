@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:marsin/utils/links.dart';
+import 'package:marsin/utils/styles.dart';
 
-import 'navigation_bar.dart';
+import '../navigation_bar/navigation_bar.dart';
+
+part 'start_screen_for_mobile.dart';
 
 class StartScreenForPc extends StatefulWidget {
   const StartScreenForPc({Key? key}) : super(key: key);
@@ -13,13 +16,16 @@ class StartScreenForPc extends StatefulWidget {
 class _StartScreenForPcState extends State<StartScreenForPc> {
   @override
   Widget build(BuildContext context) {
+    double wh = MediaQuery.of(context).size.width;
+    double hh = MediaQuery.of(context).size.height;
+
     return Material(
       child: Container(
         decoration: BoxDecoration(
             gradient: backColor
         ),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        width: wh,
+        height: hh,
         child: Stack(
           children: [
             //navigationBAr
@@ -54,7 +60,7 @@ class _StartScreenForPcState extends State<StartScreenForPc> {
                     style: italic,
                   ),
                   const SizedBox(
-                    height: 100,
+                    height: 30,
                   ),
                   MaterialButton(
                     onPressed: () {
@@ -66,13 +72,6 @@ class _StartScreenForPcState extends State<StartScreenForPc> {
                       decoration:  BoxDecoration(
                         gradient: gradientForButton,
                         borderRadius: BorderRadius.all(Radius.circular(80.0)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0xFF501E1E).withOpacity(0.8),
-                            blurRadius: 9,
-                            offset: Offset(4, 8),
-                          )
-                        ]
                       ),
                       child: Container(
                         width: 400,

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:marsin/widget_for_pc/about_us.dart';
-import 'package:marsin/widget_for_pc/advantages.dart';
-import 'package:marsin/widget_for_pc/deserts.dart';
-import 'package:marsin/widget_for_pc/feedback_for_pc.dart';
+import 'package:marsin/deserts_screen_for_pc/deserts_screen_for_pc.dart';
+import 'package:marsin/feedback_screen/feedback_screen_for_pc.dart';
+import 'package:marsin/start_screen/start_screen.dart';
 
-import '../utils/links.dart';
-import '../widget_for_pc/start_screen_for_pc.dart';
+import 'about_us_screen/about_us_screen.dart';
+import 'advantages_screen/advantages_screen.dart';
+import 'utils/links.dart';
 
 class HomePage extends StatefulWidget {
   static const String id = "home_page";
@@ -33,9 +33,9 @@ class _HomePageState extends State<HomePage> {
         controller:  _controller,
         padding: EdgeInsets.all(0.0),
         children: [
-          StartScreenForPc(),
-          AboutUs(),
-          Advantages(),
+          StartScreen(),
+          AboutUsScreen(),
+          AdvantagesScreen(),
           DesertForPc(),
           FeedbackForPC(),
         ],
