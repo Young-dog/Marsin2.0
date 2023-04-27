@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:marsin/deserts_screen_for_pc/deserts_screen_for_pc.dart';
 import 'package:marsin/feedback_screen/feedback_screen_for_pc.dart';
 import 'package:marsin/start_screen/start_screen.dart';
 
 import 'about_us_screen/about_us_screen.dart';
 import 'advantages_screen/advantages_screen.dart';
+import 'deserts_screen/deserts_screen_for_pc.dart';
 import 'utils/links.dart';
 
 class HomePage extends StatefulWidget {
