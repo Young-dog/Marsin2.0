@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/responsiveLayout.dart';
+import '../../utils/responsiveLayout.dart';
 import 'admin_panel_for_pc.dart';
 
 class AdminPanel extends StatelessWidget {

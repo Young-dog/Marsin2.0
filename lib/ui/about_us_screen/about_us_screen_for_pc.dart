@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import '../utils/links.dart';
-import '../utils/styles.dart';
+
+import '../../res/styles_for_text/styles_text_for_desctop.dart';
+import '../../utils/links.dart';
+import '../../utils/styles.dart';
+import 'description/description.dart';
+import 'image_about/image_about.dart';
 
 part 'about_us_screen_for_mobile.dart';
 
@@ -18,26 +22,15 @@ class AboutUs extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         child: Stack(
           fit: StackFit.expand,
-          children: [
+          children: const [
             FractionallySizedBox(
               alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  Image.asset(chocoAboutUs),
-                ],
-              ),
+              child: ImageAboutUs(),
             ),
             FractionallySizedBox(
               widthFactor: .5,
               alignment: Alignment.topRight,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text("О нас", style: bold,)
-                ],
-              ),
+              child: DescriptionForAboutUs(),
             )
           ],
         ),

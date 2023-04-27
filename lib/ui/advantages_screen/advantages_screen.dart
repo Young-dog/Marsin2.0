@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:marsin/advantages_screen/advantages_screen_for_pc.dart';
 
-import '../utils/responsiveLayout.dart';
+import '../../utils/responsiveLayout.dart';
+import 'advantages_screen_for_pc.dart';
 
 class AdvantagesScreen extends StatelessWidget {
   const AdvantagesScreen({Key? key}) : super(key: key);

@@ -51,6 +51,7 @@ dependencies:
   flutter_bloc: ^8.1.2
   equatable: ^2.0.5
   http: ^0.13.5
+  google_fonts: ^4.0.4
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +80,7 @@ flutter:
     - assets/images/cupcake.png
     - assets/images/ChocoForStart.png
     - assets/images/ChocoAboutUs.png
+    - google_fonts/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -92,19 +94,19 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: IBMPlexSerif
-      fonts:
-        - asset: fonts/IBMPlexSerif-Regular.ttf
-    - family: IBMPlexSerifBold
-      fonts:
-        - asset: fonts/IBMPlexSerif-Bold.ttf
-    - family: IBMPlexSerifItalic
-      fonts:
-        - asset: fonts/IBMPlexSerif-Italic.ttf
-    - family: IBMPlexSerifBoldItalic
-      fonts:
-        - asset: fonts/IBMPlexSerif-BoldItalic.ttf
+  #  fonts:
+  #    - family: IBMPlexSerif
+  #      fonts:
+  #        - asset: fonts/IBMPlexSerif-Regular.ttf
+  #    - family: IBMPlexSerifBold
+  #      fonts:
+  #        - asset: fonts/IBMPlexSerif-Bold.ttf
+  #    - family: IBMPlexSerifItalic
+  #      fonts:
+  #        - asset: fonts/IBMPlexSerif-Italic.ttf
+  #    - family: IBMPlexSerifBoldItalic
+  #      fonts:
+  #        - asset: fonts/IBMPlexSerif-BoldItalic.ttf
   #         style: italic
   #
   # For details regarding fonts from package dependencies,

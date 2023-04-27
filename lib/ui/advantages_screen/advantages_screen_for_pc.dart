@@ -1,8 +1,9 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import '../utils/links.dart';
-import '../utils/styles.dart';
+
+import '../../utils/links.dart';
+import '../../utils/styles.dart';
 part 'advantages_for_mobile.dart';
 
 class Advantages extends StatelessWidget {

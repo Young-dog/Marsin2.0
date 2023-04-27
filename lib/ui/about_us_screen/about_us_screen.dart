@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:marsin/about_us_screen/about_us_screen_for_pc.dart';
 
-import '../utils/responsiveLayout.dart';
+import '../../utils/responsiveLayout.dart';
+import 'about_us_screen_for_pc.dart';
 
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({Key? key}) : super(key: key);

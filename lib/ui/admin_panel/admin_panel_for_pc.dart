@@ -5,11 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:marsin/bloc/deserts_cubit.dart';
 import 'package:marsin/models/desert_model.dart';
-import 'package:marsin/home_page.dart';
+import 'package:marsin/ui/home_page.dart';
+import '../../res/styles_for_text/styles_text_for_desctop.dart';
 import '../../utils/links.dart';
-import 'package:marsin/admin_panel/admin_function.dart';
-
-import '../utils/styles.dart';
+import '../../utils/styles.dart';
+import 'admin_function.dart';
 
 part 'admin_panel_for_mobile.dart';
 
@@ -60,7 +60,7 @@ class _AdminPanelForPCState extends State<AdminPanelForPC> {
                   //Заголовок
                   Text(
                     heading,
-                    style: bold,
+                    style: styleBold,
                   ),
                   sizedBox,
                   //Выбор режима (добавление/редактирование)

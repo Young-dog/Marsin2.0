@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../utils/links.dart';
+
+import '../../res/styles_for_button/styles_for_button.dart';
+import '../../res/styles_for_text/styles_text_for_desctop.dart';
+import '../../utils/links.dart';
 
 class FeedbackForPC extends StatefulWidget {
   static const String id = "feedback_for_pc";
@@ -74,29 +77,29 @@ class _FeedbackForPCState extends State<FeedbackForPC> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Text(
+                           Text(
                             "Не смогли определиться?",
-                            style: bold,
+                            style: styleBold,
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.05,
                           ),
-                          const Text(
+                           Text(
                             "Оставьте заявку и я\nпомогу выбрать самый\nвкусный десерт!",
-                            style: italic,
+                            style: styleItalic,
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.03,
                           ),
-                          const Align(
+                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
                               padding: EdgeInsets.only(left: 120),
                               child: Text(
                                 "Имя",
-                                style: regular,
+                                style: styleRegular,
                                 textAlign: TextAlign.end,
                               ),
                             ),
@@ -146,13 +149,13 @@ class _FeedbackForPCState extends State<FeedbackForPC> {
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.01,
                           ),
-                          const Align(
+                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
                               padding: EdgeInsets.only(left: 120),
                               child: Text(
                                 "Телефон",
-                                style: regular,
+                                style: styleRegular,
                               ),
                             ),
                           ),

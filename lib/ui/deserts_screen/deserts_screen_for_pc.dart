@@ -1,11 +1,11 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:marsin/admin_panel/admin_panel_for_pc.dart';
 
+import '../../res/styles_for_text/styles_text_for_desctop.dart';
+import '../../utils/links.dart';
 import '../admin_panel/admin_panel.dart';
-import '../models/desert_model.dart';
-import '../utils/links.dart';
+import '../start_widget/navigation_bar/logo_and_name/logo.dart';
 
 class DesertForPc extends StatefulWidget {
   const DesertForPc({Key? key}) : super(key: key);
@@ -62,9 +62,9 @@ class _DesertForPcState extends State<DesertForPc> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width / 3.5,
                       ),
-                      const Text(
+                       Text(
                         "Категории десертиков",
-                        style: bold,
+                        style: styleBold,
                       )
                     ],
                   ),
@@ -306,9 +306,9 @@ class _DesertForPcState extends State<DesertForPc> {
                         color: Colors.white.withOpacity(0.1),
                         child: AlertDialog(
                           backgroundColor: const Color(0xFF4B1A3D),
-                          title: const Text(
+                          title: Text(
                             "Авторизация",
-                            style: bold,
+                            style: styleBold,
                           ),
                           actions: [
                             TextField(
